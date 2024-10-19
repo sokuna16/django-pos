@@ -17,35 +17,38 @@ for /f "tokens=2 delims=:" %%I in ('ipconfig ^| findstr "IPv4"') do (
 :: Remove leading spaces from the IP address
 set "IP=%IP:~1%"
 
-:: Update settings.py to include the device's IP address in ALLOWED_HOSTS
+:: Path to settings.py
 set "file=settings.py"
 set "temp_file=temp_settings.py"
 
-:: Create a temporary file with the updated ALLOWED_HOSTS
+:: Initialize a flag to track if the IP is already present
 set "ip_found=false"
 
-(
-    for /f "usebackq delims=" %%a in ("!file!") do (
-        echo %%a
-        echo %%a | findstr "ALLOWED_HOSTS" >nul && (
-            set "ip_found=true"
-            echo ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '!IP!', '0.0.0.0']
-        )
-    )
-) > "!temp_file!"
-
 :: Check if the IP is already in ALLOWED_HOSTS
-if "!ip_found!"=="true" (
-    findstr /c:"!IP!" "!file!" >nul || (
-        echo !IP! added to ALLOWED_HOSTS.
-        echo ALLOWED_HOSTS += ['!IP!'] >> "!temp_file!"
-    )
+for /f "usebackq tokens=* delims=" %%a in ("!file!") do (
+    echo %%a | findstr /c:"'%IP%'" >nul && set "ip_found=true"
 )
 
-:: Replace the old settings.py with the new one
-move /Y "!temp_file!" "!file!" >nul
+:: If the IP is not found, update ALLOWED_HOSTS
+if "!ip_found!"=="false" (
+    echo Adding %IP% to ALLOWED_HOSTS...
 
-:: Starting the Django development server
+    (
+        for /f "usebackq tokens=* delims=" %%a in ("!file!") do (
+            echo %%a | findstr "ALLOWED_HOSTS" >nul && (
+                echo Updating ALLOWED_HOSTS with %IP%.
+                echo ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '%IP%', '0.0.0.0']
+            ) || echo %%a
+        )
+    ) > "!temp_file!"
+
+    :: Replace the original settings.py with the updated one
+    move /Y "!temp_file!" "!file!" >nul
+) else (
+    echo IP %IP% is already in ALLOWED_HOSTS.
+)
+
+:: Start the Django development server
 echo Starting the Django development server...
 start python manage.py runserver 0.0.0.0:8000
 
@@ -56,3 +59,6 @@ timeout /t 3 /nobreak >nul
 start http://%IP%:8000/
 
 echo Server is running. You can access it at http://%IP%:8000/
+
+:: Prevent the script from closing immediately
+pause
