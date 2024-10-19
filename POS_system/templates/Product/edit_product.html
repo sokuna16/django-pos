@@ -1,0 +1,77 @@
+{% extends 'format/base_extender.html' %}
+
+{% block title %}
+    Register New User
+{% endblock %}
+
+{% block content %}
+
+<div id="layoutSidenav_content">
+
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Edit Product</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">{{ product.name }}</li>
+            </ol>
+       
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>
+                        <i class="fas fa-clipboard me-1"></i> Item Form
+                    </span>
+                    <a href="{% url 'product_list' %}" class="btn btn-link text-decoration-none" title="Back to Product List">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                </div>
+                
+                
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}  <!-- Render form fields automatically -->
+                
+                        <button type="submit" class="custom-register-btn">Update Product</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot; 
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<style>
+    .custom-register-btn {
+        float: right;
+        padding: 10px 20px; /* More padding for a larger button */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    }
+
+    .custom-register-btn:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: translateY(-2px); /* Slight lift on hover */
+    }
+
+    .card-header a {
+        color: #007bff; /* Link color */
+        font-size: 1.2rem; /* Icon size */
+    }
+
+    .card-header a:hover {
+        color: #0056b3; /* Darker blue on hover */
+    }
+</style>
+
+{% endblock %}

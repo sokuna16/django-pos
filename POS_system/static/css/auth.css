@@ -1,0 +1,150 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: #f0f4f8;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container */
+.container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 450px;
+    width: 100%;
+    transition: transform 0.2s;
+}
+
+.container:hover {
+    transform: translateY(-5px);
+}
+
+/* Login/Signup Box */
+.box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Title */
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* Form Group */
+.form-group {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Input Fields */
+.form input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form input:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+/* Submit Button */
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background-color: #3498db;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-submit:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+/* Error Messages */
+.error-list {
+    list-style: none;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #fce4e4;
+    border: 1px solid #f44336;
+    border-radius: 5px;
+    animation: fadeIn 0.5s ease-in; /* Fading effect for the message */
+}
+
+.error {
+    color: #c0392b;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0; /* Start fully transparent */
+        transform: translateY(-10px); /* Start slightly above */
+    }
+    to {
+        opacity: 1; /* End fully visible */
+        transform: translateY(0); /* End at original position */
+    }
+}
+
+/* Login/Signup Text */
+.login-text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #7f8c8d;
+    text-align: center;
+}
+
+.login-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.login-link:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .container {
+        padding: 25px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .btn-submit {
+        font-size: 16px;
+    }
+}

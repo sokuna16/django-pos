@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="{% static '/styles.css' %}">
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h1>Edit User: {{ user.username }}</h1>
+
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{ user.username }}" required>
+    
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password" value="{{ user.password }}" > 
+        
+        <input type="checkbox" id="show_password" onclick="togglePasswordVisibility()">
+        <label for="show_password">Show Password</label>
+    
+        <label for="user_type">User Type:</label>
+        <select id="user_type" name="user_type">
+            <option value="cashier" {% if user.userprofile.user_type == 'cashier' %}selected{% endif %}>Cashier</option>
+            <option value="admin" {% if user.userprofile.user_type == 'admin' %}selected{% endif %}>Admin</option>
+        </select>
+    
+        <button type="submit">Update User</button>
+    </form>
+    
+    <script>
+    function togglePasswordVisibility() {
+        var passwordInput = document.getElementById('password');
+        var showPasswordCheckbox = document.getElementById('show_password');
+        if (showPasswordCheckbox.checked) {
+            passwordInput.type = 'text'; // Show password
+        } else {
+            passwordInput.type = 'password'; // Hide password
+        }
+    }
+    </script>
+    <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+
+
+</body>
+</html>

@@ -1,0 +1,372 @@
+{% extends 'format/base_extender.html' %}
+{% load static %}
+{% load cart_extras %}
+{% block content %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Cashier</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">as Admin</li>
+            </ol>
+
+            {% if messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <ul>
+                    {% for message in messages %}
+                        <li><strong>{{ message }}</strong></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+            <!-- Product Table -->
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-box me-1"></i> Products</span>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                        Add Stock
+                    </button>
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td class="btn  btn-sm edit-product-btn"
+                                data-id="{{ product.id }}"
+                                data-name="{{ product.name }}"
+                                data-price="{{ product.price }}"
+                                data-stock="{{ product.stock }}"
+                                data-category="{{ product.category.id }}" >{{ product.name }}</td>
+                                <td>{{ product.category.name }}</td>
+                                <td>${{ product.price|floatformat:2 }}</td>
+                                <td>{{ product.stock }}</td>
+                                
+                                    <td>
+                                        | <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm">Add to Cart</a> |
+
+                                    </td>
+                                
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No products found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#categoryListModal">Manage Categories</a>
+                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#shoppingCartModal">View Cart</button>
+                        <a href="{% url 'order_history' %}" class="btn btn-secondary">History</a>
+                        
+                    </div>
+                </div>
+            </div>
+            <!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="edit-product-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" id="edit-product-id">
+
+                    <div class="mb-3">
+                        <label for="edit-product-name" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="edit-product-name" name="name" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit-product-price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="edit-product-price" name="price" step="0.01" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit-product-stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="edit-product-stock" name="stock" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit-product-category" class="form-label">Category</label>
+                        <select class="form-select" id="edit-product-category" name="category" required>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to Handle Edit Product Modal -->
+<script>
+    document.querySelectorAll('.edit-product-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-id');
+            const productName = this.getAttribute('data-name');
+            const productPrice = this.getAttribute('data-price');
+            const productStock = this.getAttribute('data-stock');
+            const productCategory = this.getAttribute('data-category');
+
+            // Populate the edit form fields
+            document.getElementById('edit-product-id').value = productId;
+            document.getElementById('edit-product-name').value = productName;
+            document.getElementById('edit-product-price').value = productPrice;
+            document.getElementById('edit-product-stock').value = productStock;
+            document.getElementById('edit-product-category').value = productCategory;
+
+            // Set the form action to the appropriate product edit URL
+            const form = document.getElementById('edit-product-form');
+            form.action = "{% url 'edit_product' 0 %}".replace('0', productId);
+
+            // Show the modal
+            const editProductModal = new bootstrap.Modal(document.getElementById('editProductModal'));
+            editProductModal.show();
+        });
+    });
+</script>
+
+            <!-- Category List Modal -->
+<div class="modal fade" id="categoryListModal" tabindex="-1" aria-labelledby="categoryListModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryListModalLabel">Category Management</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="category-list-tab" data-bs-toggle="tab" data-bs-target="#categoryList" type="button" role="tab" aria-controls="categoryList" aria-selected="true">Category List</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="add-category-tab" data-bs-toggle="tab" data-bs-target="#addCategory" type="button" role="tab" aria-controls="addCategory" aria-selected="false">Add Category</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="edit-category-tab" data-bs-toggle="tab" data-bs-target="#editCategory" type="button" role="tab" aria-controls="editCategory" aria-selected="false">Edit Category</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content mt-2" id="myTabContent">
+                    <div class="tab-pane fade show active" id="categoryList" role="tabpanel" aria-labelledby="category-list-tab">
+                        <table class="table table-bordered mt-3">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for category in categories %}
+                                <tr>
+                                    <td>{{ category.name }}</td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm edit-category-btn" 
+                                            data-id="{{ category.id }}" 
+                                            data-name="{{ category.name }}">
+                                            Edit
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-center">No categories found.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="addCategory" role="tabpanel" aria-labelledby="add-category-tab">
+                        <form method="POST" action="{% url 'add_category' %}">
+                            {% csrf_token %}
+                            {{ category_form.as_p }}
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success float-end">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="editCategory" role="tabpanel" aria-labelledby="edit-category-tab">
+                        <form method="POST" action="" id="edit-category-form"> 
+                            {% csrf_token %}
+                            <input type="hidden" name="category_id" id="edit-category-id">
+                            <div class="mb-3">
+                                <label for="edit-category-name" class="form-label">Category Name</label>
+                                <input type="text" class="form-control" id="edit-category-name" name="category_name" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary float-end">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('.edit-category-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const categoryId = this.getAttribute('data-id');
+            const categoryName = this.getAttribute('data-name');
+
+            // Set form values
+            document.getElementById('edit-category-id').value = categoryId;
+            document.getElementById('edit-category-name').value = categoryName;
+
+            // Set the action to edit the correct category
+            const editForm = document.getElementById('edit-category-form');
+            editForm.action = "{% url 'edit_category' '0' %}".replace('0', categoryId); // Replace 0 with actual ID
+
+            // Switch to the Edit Category tab
+            const editTab = new bootstrap.Tab(document.getElementById('edit-category-tab'));
+            editTab.show();  // Show the Edit Category tab
+        });
+    });
+</script>
+
+
+
+
+
+            <!-- Shopping Cart Modal -->
+            <div class="modal fade" id="shoppingCartModal" tabindex="-1" aria-labelledby="shoppingCartModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="shoppingCartModalLabel">Shopping Cart</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Shopping Cart</h1>
+
+                            {% if cart_items %}
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in cart_items %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td class="d-flex align-items-center">
+                                            <form method="POST" action="{% url 'update_cart_quantity' item.id %}" class="me-2">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="decrease">
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">-</button>
+                                            </form>
+                                            <span class="mx-2">{{ item.quantity }}</span>
+                                            <form method="POST" action="{% url 'update_cart_quantity' item.id %}" class="ms-2">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="action" value="increase">
+                                                <button type="submit" class="btn btn-outline-success btn-sm">+</button>
+                                            </form>
+                                        </td>
+                                        <td>${{ item.product.price|floatformat:2 }}</td>
+                                        <td>${{ item.product.price|multiply:item.quantity|floatformat:2 }}</td>
+                                        <td>
+                                            <form method="POST" action="{% url 'delete_cart_item' item.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">No items in cart.</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <h3>Total Price: ${{ total_price|floatformat:2 }}</h3>
+                            <a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
+                            <a href="{% url 'product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+                            {% else %}
+                            <p>Your cart is empty. Please add items to your cart.</p>
+                            <a href="{% url 'product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Product Modal -->
+            <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{% url 'add_product' %}">
+                                {% csrf_token %}
+                                {{ product_form.as_p }}
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Add</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot;
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+    // Function to check if the 'open_cart' query parameter is present
+    function openCartModalIfNeeded() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('open_cart')) {
+            const cartModal = new bootstrap.Modal(document.getElementById('shoppingCartModal'));
+            cartModal.show();
+        }
+    }
+
+    // Run the function when the page loads
+    window.onload = openCartModalIfNeeded;
+</script>
+
+{% endblock %}

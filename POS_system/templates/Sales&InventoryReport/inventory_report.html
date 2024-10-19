@@ -1,0 +1,78 @@
+{% extends 'format/base_extender.html' %}
+{% load static %}
+{% block content %}
+
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Inventory Report</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Report</li>
+            </ol>
+
+            <div class="row">
+                <!-- Inventory Report Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-warehouse me-1"></i>
+                        All Products
+                    </div>
+                    <div class="card-body">
+                        <table id="datatablesSimple" border="1">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Stock</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr {% if product.stock < 5 %}style="background-color: yellow;"{% endif %}>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.stock }}</td>
+                                    <td>${{ product.price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Low Stock Products Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Low Stock Products
+                    </div>
+                    <div class="card-body">
+                        {% if low_stock %}
+                        <ul>
+                            {% for product in low_stock %}
+                            <li>{{ product.name }} ({{ product.stock }})</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>No products are low in stock.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot;
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+{% endblock %}

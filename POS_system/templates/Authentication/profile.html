@@ -1,0 +1,79 @@
+{% extends 'format/base_extender.html' %}
+
+{% block title %}
+    Register New User
+{% endblock %}
+
+{% block content %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Profile</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Update Section</li>
+            </ol>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-user-plus me-1"></i> Update Info                    
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <label for="new_password">New Password:</label>
+                        <input type="password" name="new_password" required>
+                        <br>
+                        <button type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot; 
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+{% endblock %}
+
+
+
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="{% static '/styles.css' %}">
+</head>
+<body>
+    <!-- home.html -->
+{% if messages %}
+<ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<h1>Update Profile</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="new_password">New Password:</label>
+        <input type="password" name="new_password" required>
+        <br>
+        <button type="submit">Update</button>
+    </form>
+    {% comment %} <a href="{% url 'cashier_dashboard' %}">Back to Dashboard</a> {% endcomment %}
+</body>
+</html>

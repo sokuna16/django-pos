@@ -1,0 +1,189 @@
+{% extends 'format/base_extender.html'%}
+{% load static %}
+    {% block content %}
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Gross Profit</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Report</li>
+                </ol>
+                <div class="row">
+                
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i>
+                            Daily Transaction
+                    
+                            <!-- Filter Form -->
+                            <form method="GET" style="float:right" >
+                                <div class="form-group">
+                                    <label for="start_date">Start Date:</label>
+                                <input type="date" id="start_date" name="start_date" value="{{ start_date }}">
+                                
+                                <label for="end_date">End Date:</label>
+                                <input type="date" id="end_date" name="end_date" value="{{ end_date }}">
+                                
+                                <button class="btn-submit" type="submit">Filter</button>
+                                </div>
+                                
+                            </form>
+                        </div>
+                    
+                        <div class="card-body">
+                            {% if orders %}
+                            <a style="float:right" href="{% url 'export_sales_report' %}?start_date={{ start_date }}&end_date={{ end_date }}" class="export-btn">Export to CSV</a>
+
+                                <h3>Sales Report</h3>
+
+                                <table id="datatablesSimple" border="1">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>User</th>
+                                            <th>Total Price</th>
+                                            <th>Created At</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in orders %}
+                                        <tr>
+                                            <td>{{ order.id }}</td>
+                                            <td>{{ order.user.username }}</td>
+                                            <td>{{ order.total_price }}</td>
+                                            <td>{{ order.created_at }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <div class="card">
+                                    <canvas id="salesChart" width="400" height="200"></canvas>
+                                </div>
+                                <script>
+                                    // Helper function to generate random RGBA colors
+                                    function getRandomColor() {
+                                        const r = Math.floor(Math.random() * 255);
+                                        const g = Math.floor(Math.random() * 255);
+                                        const b = Math.floor(Math.random() * 255);
+                                        return `rgba(${r}, ${g}, ${b}, 0.5)`;  // Semi-transparent fill
+                                    }
+                    
+                                    // Prepare labels and data for Chart.js
+                                    const labels = {{ labels|safe }};  // Dates on x-axis
+                                    const products = {{ products|safe }};  // Product names
+                                    const dataset = {{ dataset|safe }};  // Sales data per product
+                    
+                                    // Create datasets with random colors
+                                    const datasets = products.map(product => ({
+                                        label: product,
+                                        data: dataset[product] || [],  // Handle missing data gracefully
+                                        backgroundColor: getRandomColor(),
+                                        borderColor: getRandomColor().replace(', 0.5', ', 1'),  // Solid border color
+                                        borderWidth: 1,
+                                    }));
+                    
+                                    // Create the chart
+                                    const ctx = document.getElementById('salesChart').getContext('2d');
+                                    new Chart(ctx, {
+                                        type: 'line',  // Use bar chart
+                                        data: {
+                                            labels: labels,  // Date labels
+                                            datasets: datasets,  // Product datasets
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    title: { display: true, text: 'Quantity Sold' },
+                                                },
+                                                x: {
+                                                    title: { display: true, text: 'Date' },
+                                                },
+                                            },
+                                            responsive: true,
+                                            plugins: {
+                                                legend: {
+                                                    position: 'top',  // Place the legend at the top
+                                                    labels: {
+                                                        font: { size: 14 },  // Customize legend font size
+                                                        boxWidth: 20,  // Box size for legend color markers
+                                                        padding: 10,  // Space between legend items
+                                                    }
+                                                },
+                                                title: {
+                                                    display: true,
+                                                    text: 'Items Sold Per Date',  // Title of the chart
+                                                },
+                                            },
+                                        },
+                                    });
+                                </script>
+                            {% else %}
+                                <div class="no-orders">
+                                    <p>No orders found for the selected date range.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+
+                    
+
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    {% endblock %}
+
+
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sales Report</title>
+    <link rel="stylesheet" href="{% static 'sales.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <ul class="nav-links">
+            <li><a href="{% url 'admin_dashboard' %}" class="dashboard-btn">Dashboard</a></li>
+        </ul>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Sales Report</h1>
+    </div>
+
+    
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+{% load static %}
+{% load cart_extras %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="{% static '/styles.css' %}">
+</head>
+<body>
+    <!-- home.html -->
+{% if messages %}
+<ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<h1>Shopping Cart</h1>
+
+{% if cart_items %}
+<table border="1">
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+    </tr>
+    {% for item in cart_items %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.product.price }}</td>
+        <td>{{ item.product.price|multiply:item.quantity }}</td> <!-- Use the custom filter -->
+    </tr>
+    {% endfor %}
+</table>
+<h3>Total Price: {{ total_price }}</h3>
+<a href="{% url 'checkout' %}">Checkout</a>
+<a href="{% url 'product_list' %}">Continue Shopping</a>
+{% else %}
+<p>Your cart is empty. Please add items to your cart.</p>
+<a href="{% url 'product_list' %}">Continue Shopping</a>
+{% endif %}
+
+
+</body>
+</html>

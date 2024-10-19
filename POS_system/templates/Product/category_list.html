@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Posts</title>
+    <link rel="stylesheet" href="{% static '/styles.css' %}">
+</head>
+<body>
+    <!-- home.html -->
+{% if messages %}
+<ul>
+    {% for message in messages %}
+        <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<!-- templates/pos_app/category_list.html -->
+<h1>Categories</h1>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    {% for category in categories %}
+    <tr>
+        <td>{{ category.name }}</td>
+        <td>
+            <a href="{% url 'edit_category' category.id %}">Edit</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<a href="{% url 'add_category' %}">Add New Category</a>
+<a href="{% url 'product_list' %}">Back to Products</a>
+
+
+</body>
+</html>

@@ -1,0 +1,41 @@
+{% load cart_extras %}
+{% if cart_items %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td class="d-flex align-items-center">
+                <!-- Minus Button -->
+                <button class="btn btn-outline-danger btn-sm update-cart" 
+                        data-action="decrease" data-id="{{ item.id }}">-</button>
+                <span class="mx-2">{{ item.quantity }}</span>
+                <!-- Plus Button -->
+                <button class="btn btn-outline-success btn-sm update-cart" 
+                        data-action="increase" data-id="{{ item.id }}">+</button>
+            </td>
+            <td>${{ item.product.price }}</td>
+            <td>${{ item.product.price|multiply:item.quantity }}</td>
+            <td>
+                <button class="btn btn-danger btn-sm delete-item" data-id="{{ item.id }}">Remove</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3>Total Price: ${{ total_price }}</h3>
+<a href="{% url 'checkout' %}" class="btn btn-success">Checkout</a>
+<a href="{% url 'product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+{% else %}
+<p>Your cart is empty. Please add items to your cart.</p>
+<a href="{% url 'product_list' %}" class="btn btn-secondary">Continue Shopping</a>
+{% endif %}

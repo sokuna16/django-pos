@@ -1,0 +1,71 @@
+{% extends 'format/base_extender.html' %}
+
+{% block title %}
+    Register New User
+{% endblock %}
+
+{% block content %}
+
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Sign Up</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">New Account</li>
+            </ol>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-user-plus me-1"></i> Registration Form                    
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username:</label>
+                            <input type="text" name="username" id="username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password:</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="user_type" class="form-label">User Type:</label>
+                            <select name="user_type" id="user_type" class="form-select" required>
+                                <option value="cashier">Cashier</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success custom-register-btn" style="float:right">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot; 
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<style>
+    .custom-register-btn {
+        float: right;
+        padding: 10px 20px; /* More padding for a larger button */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    }
+
+    .custom-register-btn:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: translateY(-2px); /* Slight lift on hover */
+    }
+</style>
+
+{% endblock %}

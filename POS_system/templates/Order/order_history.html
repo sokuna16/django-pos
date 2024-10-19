@@ -1,0 +1,109 @@
+{% extends 'format/base_extender.html' %}
+
+{% block title %}
+    Order History
+{% endblock %}
+
+{% block content %}  
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Order History</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Checkout</li>
+            </ol>
+            {% if messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Order List
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Total Amount</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.created_at|date:"F j, Y, g:i a" }}</td>
+                                <td>${{ order.total_price|floatformat:2 }}</td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#orderDetailModal" 
+                                            data-order-id="{{ order.id }}">
+                                        View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No orders found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot; 
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- Order Detail Modal -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="order-detail-content">
+                <!-- Order details will be loaded here via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to load order details into the modal
+    document.addEventListener('DOMContentLoaded', function () {
+        const orderDetailModal = document.getElementById('orderDetailModal');
+
+        orderDetailModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Button that triggered the modal
+            const orderId = button.getAttribute('data-order-id'); // Extract info from data-* attributes
+            
+            // Fetch order details
+            fetch(`/order/${orderId}/`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('order-detail-content').innerHTML = html;
+                })
+                .catch(error => console.error('Error loading order details:', error));
+        });
+    });
+</script>
+
+{% endblock %}

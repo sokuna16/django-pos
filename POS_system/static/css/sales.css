@@ -1,0 +1,197 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+}
+
+/* Heading Styles */
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #3498db;
+}
+
+h3 {
+    margin: 20px 0;
+    color: #2c3e50;
+}
+/* Navbar Styles */
+.navbar {
+    background-color: #3498db; /* Background color of the navbar */
+    padding: 10px; /* Padding around the navbar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.nav-links {
+    list-style-type: none; /* Remove default list styles */
+    display: flex; /* Horizontal layout */
+    justify-content: flex-end; /* Align items to the right */
+}
+
+.nav-links li {
+    margin-left: 20px; /* Space between links */
+}
+
+.nav-links a {
+    color: white; /* Link color */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold; /* Bold text */
+}
+
+.nav-links a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px; /* Space between elements */
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+}
+
+/* Chart Styles */
+canvas {
+    max-width: 100%;
+    height: auto; /* Responsive height */
+    margin: 20px auto; /* Center canvas */
+}
+
+/* No Orders Message Styles */
+.no-orders {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #d9534f; /* Red border */
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Darker red text */
+    border-radius: 5px;
+}
+
+/* CSV Button Styles */
+.export-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    text-align: center; /* Center the text */
+}
+
+.export-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Dashboard Button Styles */
+.dashboard-btn {
+    background-color: #007bff; /* Button color */
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    text-decoration: none; /* Remove underline */
+    transition: background-color 0.3s;
+}
+
+.dashboard-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+
+    form {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: stretch; /* Full width elements */
+    }
+
+    input[type="date"], button {
+        width: 100%; /* Full width for inputs and button */
+        margin-bottom: 10px; /* Space between elements */
+    }
+
+    table {
+        font-size: 0.9em; /* Slightly smaller text in table */
+    }
+
+    h1 {
+        font-size: 1.8em; /* Smaller heading on mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.6em; /* Even smaller heading on very small screens */
+    }
+
+    button {
+        padding: 8px; /* Smaller button padding */
+    }
+
+    th, td {
+        padding: 8px; /* Reduce padding in table */
+    }
+}

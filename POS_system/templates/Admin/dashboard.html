@@ -1,0 +1,295 @@
+{% extends 'format/base_extender.html'%}
+{% load static %}
+    {% block content %}
+
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Dashboard</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+                {% if messages %}
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+                <div class="row">
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-primary text-white mb-4">
+                            <div class="card-body">Total Sales Today: ₱ {{ total_sales_today }}</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white" href="#" data-bs-toggle="modal" data-bs-target="#salesDetailsModal">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Simplified Sales Details Modal -->
+<div class="modal fade" id="salesDetailsModal" tabindex="-1" aria-labelledby="salesDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="salesDetailsModalLabel">Today's Sales Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <h6 class="fw-bold">Total Sales:</h6>
+                    <p class="fs-4 text-success">₱ {{ total_sales_today }}</p>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <h6 class="fw-bold">Transactions:</h6>
+                        <p class="fs-5">{{ total_transactions }}</p>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold">Avg. Sale Value:</h6>
+                        <p class="fs-5">₱ {{ average_sale_value }}</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+                    
+                    
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-info text-white mb-4">
+                            <div class="card-body">Total Orders Today: {{ total_orders_today }}</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#" data-bs-toggle="modal" data-bs-target="#ordersDetailsModal">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="ordersDetailsModal" tabindex="-1" aria-labelledby="ordersDetailsModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ordersDetailsModalLabel">Order Details for Today</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6>Total Orders Today:</h6>
+                                            <p>{{ total_orders_today }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Total Sales Today:</h6>
+                                            <p>₱ {{ total_sales_today }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <h6>Average Sale Value:</h6>
+                                            <p>₱ {{ average_sale_value }}</p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6>Number of Transactions:</h6>
+                                            <p>{{ total_transactions }}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <h6>Recent Orders:</h6>
+                                    <ul class="list-group">
+                                        {% for order in recent_orders %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Order #{{ order.id }} - ₱{{ order.total_price }}
+                                                <span>{{ order.created_at|date:"h:i A" }}</span>
+                                            </li>
+                                        {% empty %}
+                                            <li class="list-group-item">No orders placed today.</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                      
+                    
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-success text-white mb-4">
+                            <div class="card-body">Success Card</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white stretched-link" href="#">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6">
+                        <div class="card bg-danger text-white mb-4">
+                            <div class="card-body">Low Stocks</div>
+                            <div class="card-footer d-flex align-items-center justify-content-between">
+                                <a class="small text-white" href="#" data-bs-toggle="modal" data-bs-target="#lowStockModal">View Details</a>
+                                <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Low Stock Modal -->
+                    <div class="modal fade" id="lowStockModal" tabindex="-1" aria-labelledby="lowStockModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="lowStockModalLabel">Low Stock Items</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-group">
+                                        {% for product in low_stock_products %}
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {{ product.name }}
+                                                <span class="badge bg-danger rounded-pill">{{ product.stock }} left</span>
+                                            </li>
+                                        {% empty %}
+                                            <li class="list-group-item">No low stock items.</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-chart-area me-1"></i>
+                                Area Chart Example
+                            </div>
+                            <div class="card-body">
+                                <canvas id="myAreaChart" width="100%" height="40"></canvas>
+                            </div>
+                        </div>
+                    
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <i class="fas fa-trophy me-1"></i>
+                                Top-Selling Products Today
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                {% for product, quantity in top_products %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ product }}
+                                        <span class="badge bg-success rounded-pill">{{ quantity }} sold</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-6">
+                        <div class="card mb-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="fas fa-chart-bar me-1"></i>
+                                    Sales Chart (Today)
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="salesChart" width="100" height="40"></canvas>
+                                </div>
+                            
+                                <script>
+                                    // Helper function to generate random RGBA colors
+                                    function getRandomColor() {
+                                        const r = Math.floor(Math.random() * 255);
+                                        const g = Math.floor(Math.random() * 255);
+                                        const b = Math.floor(Math.random() * 255);
+                                        return `rgba(${r}, ${g}, ${b}, 0.5)`;
+                                    }
+                            
+                                    // Prepare data for Chart.js
+                                    const labels = {{ labels|safe }};  // Product names (x-axis)
+                                    const quantities = {{ quantities|safe }};  // Quantities sold (y-axis)
+                            
+                                    const datasets = [{
+                                        label: 'Quantity Sold',
+                                        data: quantities,
+                                        backgroundColor: labels.map(() => getRandomColor()),  // Random colors for bars
+                                        borderColor: labels.map(() => getRandomColor().replace(', 0.5', ', 1')),
+                                        borderWidth: 1,
+                                    }];
+                            
+                                    // Create the chart
+                                    const ctx = document.getElementById('salesChart').getContext('2d');
+                                    new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: labels,
+                                            datasets: datasets,
+                                        },
+                                        options: {
+                                            scales: {
+                                                y: { beginAtZero: true, title: { display: true, text: 'Quantity Sold' } },
+                                                x: { title: { display: true, text: 'Product' } },
+                                            },
+                                            responsive: true,
+                                            plugins: {
+                                                legend: { position: 'top' },
+                                                title: { display: true, text: 'Sales Data for Today' },
+                                            },
+                                        },
+                                    });
+                                </script>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-table me-1"></i>
+                        Recent Transaction
+                    </div>
+                    <div class="card-body">
+                        <table id="datatablesSimple">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Customer</th>
+                                    <th>Total Amount</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in recent_orders %}
+                                    <tr>
+                                        <td>{{ order.id }}</td>
+                                        <td>{{ order.user.username  }}</td>
+                                        <td>₱{{ order.total_price }}</td>
+                                        <td>{{ order.created_at|date:"M d, Y h:i A" }}</td> 
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    {% endblock %}
+
+
