@@ -1,1 +1,2 @@
 python manage.py runserver 192.168.1.23:8000
+'localhost','192.168.1.23', '127.0.0.1',
