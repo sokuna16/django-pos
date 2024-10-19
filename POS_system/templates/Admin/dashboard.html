@@ -30,33 +30,33 @@
                         </div>
                     </div>
                     <!-- Simplified Sales Details Modal -->
-<div class="modal fade" id="salesDetailsModal" tabindex="-1" aria-labelledby="salesDetailsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="salesDetailsModalLabel">Today's Sales Summary</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="text-center mb-4">
-                    <h6 class="fw-bold">Total Sales:</h6>
-                    <p class="fs-4 text-success">₱ {{ total_sales_today }}</p>
-                </div>
-                <div class="d-flex justify-content-between mb-3">
-                    <div>
-                        <h6 class="fw-bold">Transactions:</h6>
-                        <p class="fs-5">{{ total_transactions }}</p>
+                    <div class="modal fade" id="salesDetailsModal" tabindex="-1" aria-labelledby="salesDetailsModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md">
+                            <div class="modal-content">
+                                <div class="modal-header bg-primary text-white">
+                                    <h5 class="modal-title" id="salesDetailsModalLabel">Today's Sales Summary</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="text-center mb-4">
+                                        <h6 class="fw-bold">Total Sales:</h6>
+                                        <p class="fs-4 text-success">₱ {{ total_sales_today }}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <h6 class="fw-bold">Transactions:</h6>
+                                            <p class="fs-5">{{ total_transactions }}</p>
+                                        </div>
+                                        <div>
+                                            <h6 class="fw-bold">Avg. Sale Value:</h6>
+                                            <p class="fs-5">₱ {{ average_sale_value }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <h6 class="fw-bold">Avg. Sale Value:</h6>
-                        <p class="fs-5">₱ {{ average_sale_value }}</p>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</div>
 
                     
                     
