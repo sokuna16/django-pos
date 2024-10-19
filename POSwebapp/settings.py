@@ -13,8 +13,6 @@ SECRET_KEY = 'django-insecure-=!a+aa*xb!@qy-mqusx=613&6v2ws4dbm=+44^l^hiv1^7t7-s
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-
 import socket
 
 # Try to detect the local IP address dynamically
@@ -47,13 +45,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'POS_system.middleware.DeviceAuthenticationMiddleware',  
 ]
-
-
 
 ROOT_URLCONF = 'POSwebapp.urls'
 

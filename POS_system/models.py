@@ -4,12 +4,12 @@ from django.utils.timezone import now
 
 class Device(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ip_address = models.CharField(max_length=45)  # Supports IPv4 and IPv6
-    user_agent = models.TextField()
-    last_login = models.DateTimeField(auto_now=True)
+    ip_address = models.GenericIPAddressField()
+    user_agent = models.CharField(max_length=256)
+    created_at = models.DateTimeField(default=now)
 
     def __str__(self):
-        return f"{self.user.username} - {self.ip_address} - {self.user_agent[:20]}"
+        return f"{self.user.username}'s device ({self.ip_address})"
 
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [

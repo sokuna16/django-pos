@@ -16,6 +16,21 @@ from django.db.models import Sum
 from collections import defaultdict
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponseRedirect
+
+@login_required
+def register_device(request):
+    ip = request.META.get('REMOTE_ADDR')
+    user_agent = request.META.get('HTTP_USER_AGENT')
+
+    # Create or update the device record
+    Device.objects.update_or_create(
+        user=request.user,
+        ip_address=ip,
+        user_agent=user_agent
+    )
+
+    return HttpResponseRedirect('/') 
 
 def device_list(request):
     devices = Device.objects.filter(user=request.user)
@@ -59,16 +74,32 @@ def signup(request):
 
     return render(request, 'Authentication/signup.html', {'form': form})
 
+
 class CustomLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         login(self.request, user)  # Log the user in
+        
+        # Register the device
+        self.register_device(user)
+
         if user.is_staff: 
             messages.success(self.request, 'Log In Successful!')
             return redirect(reverse('admin_dashboard'))  # Redirect to admin dashboard
         else:
             messages.success(self.request, 'Log In Successful!')
-            return redirect(reverse('cashier_dashboard')) 
+            return redirect(reverse('cashier_dashboard'))
+
+    def register_device(self, user):
+        ip = self.request.META.get('REMOTE_ADDR')
+        user_agent = self.request.META.get('HTTP_USER_AGENT')
+
+        # Create or update the device record
+        Device.objects.update_or_create(
+            user=user,
+            ip_address=ip,
+            user_agent=user_agent
+        )
         
 def custom_logout_view(request):
     logout(request) 
