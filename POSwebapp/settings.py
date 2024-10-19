@@ -14,7 +14,19 @@ SECRET_KEY = 'django-insecure-=!a+aa*xb!@qy-mqusx=613&6v2ws4dbm=+44^l^hiv1^7t7-s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+import socket
+
+# Try to detect the local IP address dynamically
+try:
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+except Exception as e:
+    local_ip = '127.0.0.1'  # Default to localhost if detection fails
+
+# Dynamically add the detected IP to ALLOWED_HOSTS
+ALLOWED_HOSTS = [local_ip, 'localhost', '127.0.0.1']
+
 
 
 
