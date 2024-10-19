@@ -47,11 +47,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',  
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # Move this line up
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'POS_system.middleware.DeviceAuthenticationMiddleware', 
+    'POS_system.middleware.DeviceAuthenticationMiddleware',  # Keep your custom middleware here
 ]
+
 
 
 ROOT_URLCONF = 'POSwebapp.urls'
