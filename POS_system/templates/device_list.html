@@ -1,0 +1,36 @@
+{% load static %}
+{% load cart_extras %}
+
+<div class="modal-header">
+    <h5 class="modal-title">Order ID: {{ order.id }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="card mb-4">
+        <div class="card-header">
+            <h6 class="m-0">Order Summary</h6>
+        </div>
+        <div class="card-body">
+            <table id="datatablesSimple" class="table table-striped table-hover">
+                
+                    <tr>
+                        <th>IP Address</th>
+                        <th>User Agent</th>
+                        <th>Last Login</th>
+                    </tr>
+                    {% for device in devices %}
+                    <tr>
+                        <td>{{ device.ip_address }}</td>
+                        <td>{{ device.user_agent }}</td>
+                        <td>{{ device.last_login }}</td>
+                    </tr>
+                    {% endfor %}
+                
+            </table>
+        </div>
+        <div class="card-footer text-end">
+            <strong>Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}<br>
+            <strong>Total Amount:</strong> ${{ order.total_price|floatformat:2 }}
+        </div>
+    </div>
+</div>

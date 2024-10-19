@@ -17,6 +17,10 @@ from collections import defaultdict
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
 
+def device_list(request):
+    devices = Device.objects.filter(user=request.user)
+    return render(request, 'device_list.html', {'devices': devices})
+
 
 
 @login_required

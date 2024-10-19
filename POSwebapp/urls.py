@@ -6,7 +6,10 @@ from POS_system.forms import CustomAuthenticationForm
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+
+    path('devices/', views.device_list, name='device_list'),
+    
+
     path('', include('POS_system.urls')),
     path('login/', 
          views.CustomLoginView.as_view(

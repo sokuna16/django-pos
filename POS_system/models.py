@@ -2,6 +2,15 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
+class Device(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ip_address = models.CharField(max_length=45)  # Supports IPv4 and IPv6
+    user_agent = models.TextField()
+    last_login = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.ip_address} - {self.user_agent[:20]}"
+
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = [
         ('admin', 'Administrator'),
