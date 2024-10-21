@@ -284,49 +284,49 @@ def dashboard(request):
 @user_passes_test(is_admin)
 def product_list(request):
     products = Product.objects.all()
-    categories = Category.objects.all()
+    brands = Brand.objects.all()
 
     # For cart
     cart_items = CartItem.objects.filter(user=request.user, order__isnull=True)
     total_price = sum(item.product.price * item.quantity for item in cart_items)
 
-    # Handling Product and Category Form submissions
+    # Handling Product and Brand Form submissions
     if request.method == "POST":
-        if 'add_product' in request.POST:  # Check if the product form is submitted
+        if 'add_product' in request.POST: 
             product_form = ProductForm(request.POST)
             if product_form.is_valid():
                 product_form.save()
                 messages.success(request, "Product added successfully.")
                 return redirect('product_list')
-        elif 'add_category' in request.POST:  # Check if the category form is submitted
-            category_form = CategoryForm(request.POST)
-            if category_form.is_valid():
-                category_form.save()
-                messages.success(request, "Category added successfully.")
+        elif 'add_brand' in request.POST: 
+            brand_form = BrandForm(request.POST)
+            if brand_form.is_valid():
+                brand_form.save()
+                messages.success(request, "Brand added successfully.")
                 return redirect('product_list')
 
         
         
-        elif 'edit_category' in request.POST:  # Check if the category edit form is submitted
-            category_id = request.POST.get('category_id')
-            category_name = request.POST.get('category_name')
+        elif 'edit_brand' in request.POST: 
+            brand_id = request.POST.get('brand_id')
+            brand_name = request.POST.get('brand_name')
 
-            # Get the category or return a 404 if not found
-            category = get_object_or_404(Category, id=category_id)
-            category.name = category_name  # Update the category name
-            category.save()  # Save the updated category
-            messages.success(request, "Category updated successfully.")
+           
+            brand = get_object_or_404(Brand, id=brand_id)
+            brand.name = brand_name  
+            brand.save()  
+            messages.success(request, "Brand updated successfully.")
             return redirect('product_list')
 
     # If there was no POST, we want to create empty forms
     product_form = ProductForm()  
-    category_form = CategoryForm()
+    brand_form = BrandForm()
 
     context = {
         'products': products,
         'product_form': product_form,  
-        'category_form': category_form,  
-        'categories': categories,
+        'brand_form': brand_form,  
+        'brands': brands,
         'cart_items': cart_items,
         'total_price': total_price
     }
@@ -335,7 +335,7 @@ def product_list(request):
 @user_passes_test(is_admin)
 def add_product(request):
 
-    categories = Category.objects.all()
+    brands = Brand.objects.all()
 
     if request.method == "POST":
         if 'add_product' in request.POST:  # Check if the product form is submitted
@@ -345,30 +345,30 @@ def add_product(request):
                 messages.success(request, "Product added successfully.")
                 return redirect('product_list')
         
-        elif 'add_category' in request.POST:  # Check if the category form is submitted
-            category_form = CategoryForm(request.POST)
-            if category_form.is_valid():
-                category_form.save()
-                messages.success(request, "Category added successfully.")
+        elif 'add_brand' in request.POST:  # Check if the brand form is submitted
+            brand_form = BrandForm(request.POST)
+            if brand_form.is_valid():
+                brand_form.save()
+                messages.success(request, "Brand added successfully.")
                 return redirect('product_list')
         
-        elif 'edit_category' in request.POST:  # Check if the category edit form is submitted
-            category_id = request.POST.get('category_id')
-            category_name = request.POST.get('category_name')
+        elif 'edit_brand' in request.POST:  # Check if the brand edit form is submitted
+            brand_id = request.POST.get('brand_id')
+            brand_name = request.POST.get('brand_name')
 
-            # Get the category or return a 404 if not found
-            category = get_object_or_404(Category, id=category_id)
-            category.name = category_name  # Update the category name
-            category.save()  # Save the updated category
-            messages.success(request, "Category updated successfully.")
+            # Get the brand or return a 404 if not found
+            brand = get_object_or_404(Brand, id=brand_id)
+            brand.name = brand_name  # Update the brand name
+            brand.save()  # Save the updated brand
+            messages.success(request, "Brand updated successfully.")
             return redirect('product_list')
     else:
         form = ProductForm()
     
-    category_form = CategoryForm()
+    brand_form = BrandForm()
     context={
-        'category_form': category_form, 
-        'categories': categories,
+        'brand_form': brand_form, 
+        'brands': brands,
         'form': form,
     }
     return render(request, 'Product/add_product.html', context)
@@ -395,43 +395,43 @@ def delete_product(request, product_id):
         return redirect('product_list')
     return render(request, 'admin/delete_product.html', {'product': product})
 
-def category_list(request):
-    categories = Category.objects.all()
+def brand_list(request):
+    brands = Brand.objects.all()
     messages.success(request, "Product added successfully.")
-    return render(request, 'Product/category_list.html', {'categories': categories})
+    return render(request, 'Product/brand_list.html', {'brands': brands})
 
-def add_category(request):
+def add_brand(request):
     if request.method == 'POST':
-        form = CategoryForm(request.POST)
+        form = BrandForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('product_list')
         else:
             return redirect('product_list')
     else:
-        form = CategoryForm()
-    return render(request, 'Product/add_category.html', {'form': form})
+        form = BrandForm()
+    return render(request, 'Product/add_brand.html', {'form': form})
 
 @user_passes_test(is_admin)
-def edit_category(request, category_id):
-    # Fetch the category or return 404 if not found
-    category = get_object_or_404(Category, id=category_id)
+def edit_brand(request, brand_id):
+    # Fetch the brand or return 404 if not found
+    brand = get_object_or_404(Brand, id=brand_id)
 
     if request.method == "POST":
-        category_name = request.POST.get("category_name")
+        brand_name = request.POST.get("brand_name")
         
-        # Validate the category name if necessary (optional)
-        if category_name:
-            category.name = category_name  # Update the category name
-            category.save()  # Save the updated category
-            messages.success(request, "Category updated successfully.")
+        # Validate the brand name if necessary (optional)
+        if brand_name:
+            brand.name = brand_name  # Update the brand name
+            brand.save()  # Save the updated brand
+            messages.success(request, "Brand updated successfully.")
             return redirect('product_list')  # Redirect to the product list after editing
 
     # If it's a GET request or if there's an error in the POST, render the edit form
     context = {
-        'category': category,
+        'brand': brand,
     }
-    return render(request, 'path/to/edit_category_template.html', context)
+    return render(request, 'path/to/edit_brand_template.html', context)
 
 @login_required
 def delete_cart_item(request, item_id):

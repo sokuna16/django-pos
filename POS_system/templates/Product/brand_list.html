@@ -17,23 +17,23 @@
 </ul>
 {% endif %}
 
-<!-- templates/pos_app/category_list.html -->
+<!-- templates/pos_app/brand_list.html -->
 <h1>Categories</h1>
 <table border="1">
     <tr>
         <th>Name</th>
         <th>Actions</th>
     </tr>
-    {% for category in categories %}
+    {% for brand in brands %}
     <tr>
-        <td>{{ category.name }}</td>
+        <td>{{ brand.name }}</td>
         <td>
-            <a href="{% url 'edit_category' category.id %}">Edit</a>
+            <a href="{% url 'edit_brand' brand.id %}">Edit</a>
         </td>
     </tr>
     {% endfor %}
 </table>
-<a href="{% url 'add_category' %}">Add New Category</a>
+<a href="{% url 'add_brand' %}">Add New Brand</a>
 <a href="{% url 'product_list' %}">Back to Products</a>
 
 

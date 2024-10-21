@@ -29,16 +29,34 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-
+    
 class Category(models.Model):
+    CATEGORY_CHOICES = [
+        ('Clothing', 'Clothing'),
+        ('Accessories', 'Accessories'),
+        ('Footwear', 'Footwear'),
+        ('Beauty Products', 'Beauty Products'),
+    ]
+    
+    name = models.CharField(
+        max_length=100, 
+        choices=CATEGORY_CHOICES, 
+        unique=True
+    )
+
+    def __str__(self):
+        return self.get_name_display() 
+    
+class Brand (models.Model):
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
-
-
+    
+    
 class Product(models.Model):
     name = models.CharField(max_length=100)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.IntegerField()

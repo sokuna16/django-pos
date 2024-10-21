@@ -12,11 +12,14 @@ class PostForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'category', 'price', 'stock', 'description']
+        fields = ['name', 'brand', 'price', 'stock', 'description']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter product name'
+            }),
+            'brand': forms.Select(attrs={
+                'class': 'form-select',
             }),
             'category': forms.Select(attrs={
                 'class': 'form-select',
@@ -36,15 +39,15 @@ class ProductForm(forms.ModelForm):
             }),
         }
 
-class CategoryForm(forms.ModelForm):
+class BrandForm(forms.ModelForm):
     class Meta:
-        model = Category
+        model = Brand
         fields = ['name']
         widgets = {
             'name': forms.TextInput(
                 attrs={
                     'class': 'form-control',  # Bootstrap styling
-                    'placeholder': 'Enter category name',
+                    'placeholder': 'Enter brand name',
                     'required': 'required',   # Makes the field mandatory
                 }
             ),
@@ -53,8 +56,8 @@ class CategoryForm(forms.ModelForm):
     def clean_name(self):
         name = self.cleaned_data.get('name')
         
-        if Category.objects.filter(name=name).exists():
-            raise forms.ValidationError("This category name already exists. Please choose a different one.")
+        if Brand.objects.filter(name=name).exists():
+            raise forms.ValidationError("This brand name already exists. Please choose a different one.")
         return name
 
 

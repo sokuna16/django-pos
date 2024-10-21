@@ -34,7 +34,7 @@
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Category</th>
+                                <th>Brand</th>
                                 <th>Price</th>
                                 <th>Stock</th>
                             </tr>
@@ -47,8 +47,8 @@
                                 data-name="{{ product.name }}"
                                 data-price="{{ product.price }}"
                                 data-stock="{{ product.stock }}"
-                                data-category="{{ product.category.id }}" >{{ product.name }}</td>
-                                <td>{{ product.category.name }}</td>
+                                data-brand="{{ product.brand.id }}" >{{ product.name }}</td>
+                                <td>{{ product.brand.name }}</td>
                                 <td>${{ product.price|floatformat:2 }}</td>
                                 <td>{{ product.stock }}</td>
                                 
@@ -67,7 +67,7 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-between mt-3">
-                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#categoryListModal" title="Manage Categories">
+                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#brandListModal" title="Manage Brands">
                             <i class="fas fa-tags"></i>
                         </a>
                         <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#shoppingCartModal" title="View Cart">
@@ -109,10 +109,10 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="edit-product-category" class="form-label">Category</label>
-                        <select class="form-select" id="edit-product-category" name="category" required>
-                            {% for category in categories %}
-                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        <label for="edit-product-brand" class="form-label">Brand</label>
+                        <select class="form-select" id="edit-product-brand" name="brand" required>
+                            {% for brand in brands %}
+                            <option value="{{ brand.id }}">{{ brand.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -134,14 +134,14 @@
             const productName = this.getAttribute('data-name');
             const productPrice = this.getAttribute('data-price');
             const productStock = this.getAttribute('data-stock');
-            const productCategory = this.getAttribute('data-category');
+            const productBrand = this.getAttribute('data-brand');
 
             // Populate the edit form fields
             document.getElementById('edit-product-id').value = productId;
             document.getElementById('edit-product-name').value = productName;
             document.getElementById('edit-product-price').value = productPrice;
             document.getElementById('edit-product-stock').value = productStock;
-            document.getElementById('edit-product-category').value = productCategory;
+            document.getElementById('edit-product-brand').value = productBrand;
 
             // Set the form action to the appropriate product edit URL
             const form = document.getElementById('edit-product-form');
@@ -154,29 +154,29 @@
     });
 </script>
 
-            <!-- Category List Modal -->
-<div class="modal fade" id="categoryListModal" tabindex="-1" aria-labelledby="categoryListModalLabel" aria-hidden="true">
+            <!-- Brand List Modal -->
+<div class="modal fade" id="brandListModal" tabindex="-1" aria-labelledby="brandListModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="categoryListModalLabel">Category Management</h5>
+                <h5 class="modal-title" id="brandListModalLabel">Brand Management</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="category-list-tab" data-bs-toggle="tab" data-bs-target="#categoryList" type="button" role="tab" aria-controls="categoryList" aria-selected="true">Category List</button>
+                        <button class="nav-link active" id="brand-list-tab" data-bs-toggle="tab" data-bs-target="#brandList" type="button" role="tab" aria-controls="brandList" aria-selected="true">Brand List</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="add-category-tab" data-bs-toggle="tab" data-bs-target="#addCategory" type="button" role="tab" aria-controls="addCategory" aria-selected="false">Add Category</button>
+                        <button class="nav-link" id="add-brand-tab" data-bs-toggle="tab" data-bs-target="#addBrand" type="button" role="tab" aria-controls="addBrand" aria-selected="false">Add Brand</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="edit-category-tab" data-bs-toggle="tab" data-bs-target="#editCategory" type="button" role="tab" aria-controls="editCategory" aria-selected="false">Edit Category</button>
+                        <button class="nav-link" id="edit-brand-tab" data-bs-toggle="tab" data-bs-target="#editBrand" type="button" role="tab" aria-controls="editBrand" aria-selected="false">Edit Brand</button>
                     </li>
                 </ul>
 
                 <div class="tab-content mt-2" id="myTabContent">
-                    <div class="tab-pane fade show active" id="categoryList" role="tabpanel" aria-labelledby="category-list-tab">
+                    <div class="tab-pane fade show active" id="brandList" role="tabpanel" aria-labelledby="brand-list-tab">
                         <table class="table table-bordered mt-3">
                             <thead>
                                 <tr>
@@ -185,42 +185,42 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for category in categories %}
+                                {% for brand in brands %}
                                 <tr>
-                                    <td>{{ category.name }}</td>
+                                    <td>{{ brand.name }}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm edit-category-btn" 
-                                            data-id="{{ category.id }}" 
-                                            data-name="{{ category.name }}">
+                                        <button class="btn btn-warning btn-sm edit-brand-btn" 
+                                            data-id="{{ brand.id }}" 
+                                            data-name="{{ brand.name }}">
                                             Edit
                                         </button>
                                     </td>
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="2" class="text-center">No categories found.</td>
+                                    <td colspan="2" class="text-center">No brands found.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
                             
                         </table>
                     </div>
-                    <div class="tab-pane fade" id="addCategory" role="tabpanel" aria-labelledby="add-category-tab">
-                        <form method="POST" action="{% url 'add_category' %}">
+                    <div class="tab-pane fade" id="addBrand" role="tabpanel" aria-labelledby="add-brand-tab">
+                        <form method="POST" action="{% url 'add_brand' %}">
                             {% csrf_token %}
-                            {{ category_form.as_p }}
+                            {{ brand_form.as_p }}
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-success float-end">Add</button>
                             </div>
                         </form>
                     </div>
-                    <div class="tab-pane fade" id="editCategory" role="tabpanel" aria-labelledby="edit-category-tab">
-                        <form method="POST" action="" id="edit-category-form"> 
+                    <div class="tab-pane fade" id="editBrand" role="tabpanel" aria-labelledby="edit-brand-tab">
+                        <form method="POST" action="" id="edit-brand-form"> 
                             {% csrf_token %}
-                            <input type="hidden" name="category_id" id="edit-category-id">
+                            <input type="hidden" name="brand_id" id="edit-brand-id">
                             <div class="mb-3">
-                                <label for="edit-category-name" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="edit-category-name" name="category_name" required>
+                                <label for="edit-brand-name" class="form-label">Brand Name</label>
+                                <input type="text" class="form-control" id="edit-brand-name" name="brand_name" required>
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary float-end">Update</button>
@@ -234,22 +234,22 @@
     </div>
 </div>
 <script>
-    document.querySelectorAll('.edit-category-btn').forEach(button => {
+    document.querySelectorAll('.edit-brand-btn').forEach(button => {
         button.addEventListener('click', function () {
-            const categoryId = this.getAttribute('data-id');
-            const categoryName = this.getAttribute('data-name');
+            const brandId = this.getAttribute('data-id');
+            const brandName = this.getAttribute('data-name');
 
             // Set form values
-            document.getElementById('edit-category-id').value = categoryId;
-            document.getElementById('edit-category-name').value = categoryName;
+            document.getElementById('edit-brand-id').value = brandId;
+            document.getElementById('edit-brand-name').value = brandName;
 
-            // Set the action to edit the correct category
-            const editForm = document.getElementById('edit-category-form');
-            editForm.action = "{% url 'edit_category' '0' %}".replace('0', categoryId); // Replace 0 with actual ID
+            // Set the action to edit the correct brand
+            const editForm = document.getElementById('edit-brand-form');
+            editForm.action = "{% url 'edit_brand' '0' %}".replace('0', brandId); // Replace 0 with actual ID
 
-            // Switch to the Edit Category tab
-            const editTab = new bootstrap.Tab(document.getElementById('edit-category-tab'));
-            editTab.show();  // Show the Edit Category tab
+            // Switch to the Edit Brand tab
+            const editTab = new bootstrap.Tab(document.getElementById('edit-brand-tab'));
+            editTab.show();  // Show the Edit Brand tab
         });
     });
 </script>

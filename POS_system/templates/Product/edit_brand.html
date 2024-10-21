@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 {% load static %}
 
@@ -17,14 +18,14 @@
 </ul>
 {% endif %}
 
-<!-- templates/pos_app/add_category.html -->
-<h1>Add Category</h1>
+<!-- templates/pos_app/edit_brand.html -->
+<h1>Edit Brand</h1>
 <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Add Category</button>
+    <button type="submit">Save Changes</button>
 </form>
-<a href="{% url 'category_list' %}">Back to Categories</a>
+<a href="{% url 'brand_list' %}">Back to Categories</a>
 
 
 </body>
