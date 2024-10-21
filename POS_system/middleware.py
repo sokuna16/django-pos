@@ -5,6 +5,7 @@ from django.utils import timezone
 
 class DeviceAuthenticationMiddleware:
     """Ensure the device is registered for the current user."""
+    
     def __init__(self, get_response):
         self.get_response = get_response
 

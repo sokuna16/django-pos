@@ -1,30 +1,166 @@
-<!DOCTYPE html>
-{% load static %}
+{% extends 'format/base_extender.html' %}
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Blog Posts</title>
-    <link rel="stylesheet" href="{% static '/styles.css' %}">
-</head>
-<body>
-    {% if messages %}
-<ul>
-    {% for message in messages %}
-        <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% block title %}
+    Order History
+{% endblock %}
 
-<h1>Add Product</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Product</button>
-</form>
-<a href="{% url 'product_list' %}">Back to Product List</a>
-<a href="{% url 'category_list' %}">Manage Categories</a>
+{% block content %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Order History</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Checkout</li>
+            </ol>
 
+            {% if messages %}
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <ul class="mb-0">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
 
-</body>
-</html>
+            <div class="card mb-4">
+                <div class="card-header d-flex align-items-center">
+                    <i class="fas fa-table me-2"></i>
+                    <span>Add Product</span>
+                </div>
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Add New Product</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Add Product
+                        </button>
+                    </form>
+                    
+                    <div class="mt-4 d-flex justify-content-between">
+                        <a href="{% url 'product_list' %}" class="btn btn-outline-secondary" title="Back to Product List">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Product List
+                        </a>
+                        <a href="{% url 'category_list' %}" class="btn btn-outline-secondary"  data-bs-toggle="modal" data-bs-target="#categoryListModal" title="Manage Categories">
+                            <i class="fas fa-list me-1"></i> Manage Categories
+                        </a>
+                    </div>
+                    <div class="modal fade" id="categoryListModal" tabindex="-1" aria-labelledby="categoryListModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="categoryListModalLabel">Category Management</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="category-list-tab" data-bs-toggle="tab" data-bs-target="#categoryList" type="button" role="tab" aria-controls="categoryList" aria-selected="true">Category List</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="add-category-tab" data-bs-toggle="tab" data-bs-target="#addCategory" type="button" role="tab" aria-controls="addCategory" aria-selected="false">Add Category</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="edit-category-tab" data-bs-toggle="tab" data-bs-target="#editCategory" type="button" role="tab" aria-controls="editCategory" aria-selected="false">Edit Category</button>
+                                        </li>
+                                    </ul>
+                    
+                                    <div class="tab-content mt-2" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="categoryList" role="tabpanel" aria-labelledby="category-list-tab">
+                                            <table class="table table-bordered mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for category in categories %}
+                                                    <tr>
+                                                        <td>{{ category.name }}</td>
+                                                        <td>
+                                                            <button class="btn btn-warning btn-sm edit-category-btn" 
+                                                                data-id="{{ category.id }}" 
+                                                                data-name="{{ category.name }}">
+                                                                Edit
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="2" class="text-center">No categories found.</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                                
+                                            </table>
+                                        </div>
+                                        <div class="tab-pane fade" id="addCategory" role="tabpanel" aria-labelledby="add-category-tab">
+                                            <form method="POST" action="{% url 'add_category' %}">
+                                                {% csrf_token %}
+                                                {{ category_form.as_p }}
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success float-end">Add</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="tab-pane fade" id="editCategory" role="tabpanel" aria-labelledby="edit-category-tab">
+                                            <form method="POST" action="" id="edit-category-form"> 
+                                                {% csrf_token %}
+                                                <input type="hidden" name="category_id" id="edit-category-id">
+                                                <div class="mb-3">
+                                                    <label for="edit-category-name" class="form-label">Category Name</label>
+                                                    <input type="text" class="form-control" id="edit-category-name" name="category_name" required>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary float-end">Update</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        document.querySelectorAll('.edit-category-btn').forEach(button => {
+                            button.addEventListener('click', function () {
+                                const categoryId = this.getAttribute('data-id');
+                                const categoryName = this.getAttribute('data-name');
+                    
+                                // Set form values
+                                document.getElementById('edit-category-id').value = categoryId;
+                                document.getElementById('edit-category-name').value = categoryName;
+                    
+                                // Set the action to edit the correct category
+                                const editForm = document.getElementById('edit-category-form');
+                                editForm.action = "{% url 'edit_category' '0' %}".replace('0', categoryId); // Replace 0 with actual ID
+                    
+                                // Switch to the Edit Category tab
+                                const editTab = new bootstrap.Tab(document.getElementById('edit-category-tab'));
+                                editTab.show();  // Show the Edit Category tab
+                            });
+                        });
+                    </script>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#" class="text-muted">Privacy Policy</a> &middot; 
+                    <a href="#" class="text-muted">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+{% endblock %}

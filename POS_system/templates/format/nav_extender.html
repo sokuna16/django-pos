@@ -16,10 +16,23 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="{% url 'logout' %}"> Devices that log </a></li>
-                <li><hr class="dropdown-divider" /></li>
-                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'device_list' %}">
+                        <i class="fas fa-device"></i> 
+                        Devices that log
+                    </a>
+                </li>
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> 
+                        Logout
+                    </a>
+                </li>
             </ul>
+            
         </li>
     </ul>
 </nav>
@@ -35,16 +48,27 @@
                     </a>
                     <div class="sb-sidenav-menu-heading">Interface</div>
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        <div class="sb-nav-link-icon">
+                            <i class="fas fa-columns"></i>
+                        </div>
                         Reports
-                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        <div class="sb-sidenav-collapse-arrow">
+                            <i class="fas fa-angle-down"></i>
+                        </div>
                     </a>
                     <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link"  href="{% url 'sales_report' %}">Sales</a>
-                            <a class="nav-link" href="{% url 'inventory_report' %}">Inventory</a>
+                            <a class="nav-link" href="{% url 'sales_report' %}">
+                                <i class="fas fa-chart-line icon-margin" style="margin-right: 8px;"></i>  
+                                Sales
+                            </a>
+                            <a class="nav-link" href="{% url 'inventory_report' %}">
+                                <i class="fas fa-box icon-margin" style="margin-right: 8px;"></i>  
+                                Inventory
+                            </a>
                         </nav>
                     </div>
+                    
                     <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                         <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                         Pages
@@ -52,43 +76,67 @@
                     </a>
                     <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                            
-                            <a class="nav-link collapsed" href="{% url 'product_list' %}" aria-expanded="false" aria-controls="pagesCollapseError">
+                            <a class="nav-link collapsed" href="{% url 'product_list' %}" aria-expanded="false" aria-controls="pagesCollapseCashier">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-shield"></i></div>
                                 Cashier as Admin
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <a class="nav-link" href="500.html">Add Item</a> 
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                Clothing Items 
+                            <a class="nav-link"  href="{% url 'add_product' %}">
+                                <div class="sb-nav-link-icon" ><i class="fas fa-plus-circle"></i></div>
+                                Add Item
+                            </a>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseCategories" aria-expanded="false" aria-controls="pagesCollapseCategories">
+                                <div class="sb-nav-link-icon"><i class="fas fa-th-list"></i></div>
+                                Categories 
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                             </a>
-                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                            <div class="collapse" id="pagesCollapseCategories" aria-labelledby="headingCategories" data-bs-parent="#sidenavAccordionPages">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    
-                                    <a class="nav-link" > Bag's List</a>
-                                    <a class="nav-link" href="404.html">Shoe's</a>
-                                    <a class="nav-link" href="500.html">Shirt</a>
-                                    <a class="nav-link" href="500.html">Beauty Products</a>
-                                    
+                                    <a class="nav-link" href="clothing.html">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-tshirt"></i></div>
+                                        Clothing
+                                    </a>
+                                    <a class="nav-link" href="accessories.html">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-hat-cowboy"></i></div>
+                                        Accessories
+                                    </a>
+                                    <a class="nav-link" href="footwear.html">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-shoe-prints"></i></div>
+                                        Footwear
+                                    </a>
+                                    <a class="nav-link" href="beauty.html">
+                                        <div class="sb-nav-link-icon"><i class="fas fa-gift"></i></div>
+                                        Beauty Products
+                                    </a>
                                 </nav>
                             </div>
                             
-                            
                         </nav>
                     </div>
+                    
 
-                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsss" aria-expanded="false" aria-controls="collapseLayouts">
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAuthentication" aria-expanded="false" aria-controls="collapseAuthentication">
                         <div class="sb-nav-link-icon"><i class="fas fa-shield-alt"></i></div>
                         Authentication
                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                     </a>
-                    <div class="collapse" id="collapseLayoutsss" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                    <div class="collapse" id="collapseAuthentication" aria-labelledby="headingAuthentication" data-bs-parent="#sidenavAccordion">
                         <nav class="sb-sidenav-menu-nested nav">
-                            <a class="nav-link" href="{% url 'update_profile' %}">My Account</a>
-                                    <a class="nav-link" href="{% url 'register_user' %}">Register User</a>
-                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                            <a class="nav-link" href="{% url 'update_profile' %}">
+                                <i class="fas fa-user-circle" style="margin-right: 8px;"></i>   
+                                My Account
+                            </a>
+                            <a class="nav-link" href="{% url 'register_user' %}">
+                                <i class="fas fa-user-plus" style="margin-right: 8px;"></i>  
+                            </a>
+                            <a class="nav-link" href="password.html">
+                                <i class="fas fa-key" style="margin-right: 8px;"></i> 
+                                Forgot Password
+                            </a>
                         </nav>
+                        
                     </div>
+                    
                     <div class="sb-sidenav-menu-heading">Addons</div>
                     <a class="nav-link" href="charts.html">
                         <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>

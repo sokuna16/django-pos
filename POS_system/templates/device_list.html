@@ -1,36 +1,64 @@
+{% extends 'format/base_extender.html' %}
 {% load static %}
-{% load cart_extras %}
+{% block content %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Device Log Information</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Secure</li>
+            </ol>
 
-<div class="modal-header">
-    <h5 class="modal-title">Order ID: {{ order.id }}</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-user-plus me-1"></i> Device's Log
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>IP Address</th>
+                                <th>User Agent</th>
+                                <th>Device Type</th>
+                                <th>Last Login</th>
+                                {% comment %} <th>City</th>
+                                <th>Region</th>
+                                <th>Country</th>
+                                <th>Latitude</th>
+                                <th>Longitude</th> {% endcomment %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in devices %}
+                            <tr>
+                                <td>{{ device.ip_address }}</td>
+                                <td>{{ device.user_agent }}</td>
+                                <td>{{ device.device_type }}</td>
+                                <td>{{ device.last_login }}</td>
+                                {% comment %} <td>{{ device.location_info.city }}</td>
+                                <td>{{ device.location_info.region }}</td>
+                                <td>{{ device.location_info.country }}</td>
+                                <td>{{ device.location_info.latitude }}</td>
+                                <td>{{ device.location_info.longitude }}</td> {% endcomment %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot; 
+                    <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
-<div class="modal-body">
-    <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="m-0">Order Summary</h6>
-        </div>
-        <div class="card-body">
-            <table id="datatablesSimple" class="table table-striped table-hover">
-                
-                    <tr>
-                        <th>IP Address</th>
-                        <th>User Agent</th>
-                        <th>Last Login</th>
-                    </tr>
-                    {% for device in devices %}
-                    <tr>
-                        <td>{{ device.ip_address }}</td>
-                        <td>{{ device.user_agent }}</td>
-                        <td>{{ device.last_login }}</td>
-                    </tr>
-                    {% endfor %}
-                
-            </table>
-        </div>
-        <div class="card-footer text-end">
-            <strong>Date:</strong> {{ order.created_at|date:"F j, Y, g:i a" }}<br>
-            <strong>Total Amount:</strong> ${{ order.total_price|floatformat:2 }}
-        </div>
-    </div>
-</div>
+{% endblock %}

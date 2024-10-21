@@ -24,9 +24,10 @@
             <div class="card mb-4">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <span><i class="fas fa-box me-1"></i> Products</span>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                        Add Stock
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal" title="Add Stock">
+                        <i class="fas fa-plus"></i>
                     </button>
+                    
                 </div>
                 <div class="card-body">
                     <table id="datatablesSimple" class="table table-bordered table-striped">
@@ -51,10 +52,11 @@
                                 <td>${{ product.price|floatformat:2 }}</td>
                                 <td>{{ product.stock }}</td>
                                 
-                                    <td>
-                                        | <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm">Add to Cart</a> |
-
-                                    </td>
+                                <td>
+                                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm" title="Add to Cart">
+                                        <i class="fas fa-shopping-cart"></i> <!-- Shopping cart icon -->
+                                    </a>
+                                </td>
                                 
                             </tr>
                             {% empty %}
@@ -65,11 +67,17 @@
                         </tbody>
                     </table>
                     <div class="d-flex justify-content-between mt-3">
-                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#categoryListModal">Manage Categories</a>
-                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#shoppingCartModal">View Cart</button>
-                        <a href="{% url 'order_history' %}" class="btn btn-secondary">History</a>
-                        
+                        <a class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#categoryListModal" title="Manage Categories">
+                            <i class="fas fa-tags"></i>
+                        </a>
+                        <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#shoppingCartModal" title="View Cart">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                        <a href="{% url 'order_history' %}" class="btn btn-secondary" title="Order History">
+                            <i class="fas fa-history"></i> 
+                        </a>
                     </div>
+                    
                 </div>
             </div>
             <!-- Edit Product Modal -->
@@ -258,11 +266,10 @@
                             <h5 class="modal-title" id="shoppingCartModalLabel">Shopping Cart</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                             <h1>Shopping Cart</h1>
-
                             {% if cart_items %}
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" style="width: 100%;">
                                 <thead>
                                     <tr>
                                         <th>Product</th>
@@ -292,10 +299,13 @@
                                         <td>${{ item.product.price|floatformat:2 }}</td>
                                         <td>${{ item.product.price|multiply:item.quantity|floatformat:2 }}</td>
                                         <td>
-                                            <form method="POST" action="{% url 'delete_cart_item' item.id %}">
+                                            <form method="POST" action="{% url 'delete_cart_item' item.id %}" style="display:inline;">
                                                 {% csrf_token %}
-                                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" title="Remove">
+                                                    <i class="fas fa-trash-alt"></i> <!-- Trash can icon -->
+                                                </button>
                                             </form>
+                                            
                                         </td>
                                     </tr>
                                     {% empty %}
@@ -313,6 +323,7 @@
                             <a href="{% url 'product_list' %}" class="btn btn-secondary">Continue Shopping</a>
                             {% endif %}
                         </div>
+                        
                     </div>
                 </div>
             </div>

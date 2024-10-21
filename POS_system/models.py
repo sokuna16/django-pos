@@ -6,8 +6,7 @@ class Device(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     ip_address = models.GenericIPAddressField()
     user_agent = models.CharField(max_length=256)
-    created_at = models.DateTimeField(default=now)
-
+    last_login = models.DateTimeField(auto_now=True)  
     def __str__(self):
         return f"{self.user.username}'s device ({self.ip_address})"
 
@@ -36,6 +35,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Product(models.Model):
     name = models.CharField(max_length=100)

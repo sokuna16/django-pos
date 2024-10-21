@@ -64,23 +64,29 @@
                         <div class="card bg-info text-white mb-4">
                             <div class="card-body">Total Orders Today: {{ total_orders_today }}</div>
                             <div class="card-footer d-flex align-items-center justify-content-between">
-                                <a class="small text-white stretched-link" href="#" data-bs-toggle="modal" data-bs-target="#ordersDetailsModal">View Details</a>
+                                <a class="small text-white stretched-link" href="#" 
+                                   data-bs-toggle="modal" data-bs-target="#transactionsDetailsModal">
+                                    View Details
+                                </a>
                                 <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="ordersDetailsModal" tabindex="-1" aria-labelledby="ordersDetailsModalLabel" aria-hidden="true">
+                    
+                    <!-- Transactions Details Modal -->
+                    <div class="modal fade" id="transactionsDetailsModal" tabindex="-1" 
+                         aria-labelledby="transactionsDetailsModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="ordersDetailsModalLabel">Order Details for Today</h5>
+                                    <h5 class="modal-title" id="transactionsDetailsModalLabel">Transactions for Today</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <h6>Total Orders Today:</h6>
-                                            <p>{{ total_orders_today }}</p>
+                                            <h6>Total Transactions:</h6>
+                                            <p>{{ total_transactions }}</p>
                                         </div>
                                         <div class="col-md-6">
                                             <h6>Total Sales Today:</h6>
@@ -89,31 +95,47 @@
                                     </div>
                                     <div class="row mt-3">
                                         <div class="col-md-6">
-                                            <h6>Average Sale Value:</h6>
-                                            <p>₱ {{ average_sale_value }}</p>
+                                            <h6>Average Transaction Value:</h6>
+                                            <p>₱ {{ average_transaction_value }}</p>
                                         </div>
                                         <div class="col-md-6">
-                                            <h6>Number of Transactions:</h6>
-                                            <p>{{ total_transactions }}</p>
+                                            <h6>Total Orders Today:</h6>
+                                            <p>{{ total_orders_today }}</p>
                                         </div>
                                     </div>
                                     <hr>
-                                    <h6>Recent Orders:</h6>
+                                    <!-- Recent Transactions List -->
+                                    <h6 class="mb-3">Recent Transactions:</h6>
                                     <ul class="list-group">
-                                        {% for order in recent_orders %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                Order #{{ order.id }} - ₱{{ order.total_price }}
-                                                <span>{{ order.created_at|date:"h:i A" }}</span>
+                                        {% for transaction in recent_transactions %}
+                                            <li class="list-group-item">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <i class="fas fa-receipt me-2 text-success"></i>
+                                                        <strong>Transaction #{{ transaction.id }}</strong> - ₱{{ transaction.total_price }}
+                                                    </div>
+                                                    <span class="text-muted">{{ transaction.created_at|date:"h:i A" }}</span>
+                                                </div>
+                                                <ul class="mt-2">
+                                                    {% for item in transaction.items.all %}
+                                                        <li class="text-muted">
+                                                            {{ item.quantity }} x {{ item.product.name }} - ₱{{ item.product.price }}
+                                                        </li>
+                                                    {% empty %}
+                                                        <li>No items in this transaction.</li>
+                                                    {% endfor %}
+                                                </ul>
                                             </li>
                                         {% empty %}
-                                            <li class="list-group-item">No orders placed today.</li>
+                                            <li class="list-group-item text-center">No transactions recorded today.</li>
                                         {% endfor %}
                                     </ul>
+
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
+                    
                       
                     
                     <div class="col-xl-3 col-md-6">

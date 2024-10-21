@@ -17,24 +17,77 @@ from collections import defaultdict
 from django.urls import reverse
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
+import logging 
+from .utils import *
+# Check if user is an admin
+def is_admin(user):
+    return user.is_superuser
+
+class CustomLoginView(LoginView):
+    def form_valid(self, form):
+        user = form.get_user()
+        self.request.session['ip_address'] = self.get_client_ip()  
+
+        # Register device
+        self.register_device(user)
+
+        if user.is_staff: 
+            messages.success(self.request, 'Log In Successful!')
+            return redirect(reverse('admin_dashboard')) 
+        else:
+            messages.success(self.request, 'Log In Successful!')
+            return redirect(reverse('cashier_dashboard')) 
+
+    def register_device(self, user):
+        ip = self.get_client_ip()  
+        user_agent = self.request.META.get('HTTP_USER_AGENT')
+
+       
+        device, created = Device.objects.update_or_create(
+            user=user,
+            ip_address=ip,
+            user_agent=user_agent,
+            defaults={'last_login': timezone.now()}  
+        )
+
+        if created:
+            messages.info(self.request, 'New device registered.')
+        else:
+            messages.info(self.request, 'Device information updated.')
+
+    def get_client_ip(self):
+        x_forwarded_for = self.request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = self.request.META.get('REMOTE_ADDR')
+        return ip
+
+logger = logging.getLogger(__name__)
 
 @login_required
-def register_device(request):
-    ip = request.META.get('REMOTE_ADDR')
-    user_agent = request.META.get('HTTP_USER_AGENT')
-
-    # Create or update the device record
-    Device.objects.update_or_create(
-        user=request.user,
-        ip_address=ip,
-        user_agent=user_agent
-    )
-
-    return HttpResponseRedirect('/') 
-
+@user_passes_test(is_admin)
 def device_list(request):
-    devices = Device.objects.filter(user=request.user)
-    return render(request, 'device_list.html', {'devices': devices})
+    devices = Device.objects.all()  # You may filter by user if needed
+    device_info_list = []  # List to hold device info dictionaries
+
+    for device in devices:
+        device_type = get_device_info(device.user_agent)  # Get device type
+        location_info = get_location(device.ip_address)    # Get location from IP address
+
+        # Create a dictionary to hold all relevant information
+        device_info = {
+            'ip_address': device.ip_address,
+            'user_agent': device.user_agent,
+            'last_login': device.last_login,
+            'device_type': device_type,
+            'location_info': location_info
+        }
+
+        device_info_list.append(device_info)  
+
+    logger.info(f"{request.user.username} accessed the device list.")
+    return render(request, 'device_list.html', {'devices': device_info_list})
 
 
 
@@ -106,9 +159,6 @@ def custom_logout_view(request):
     messages.success(request, 'You have been logged out successfully.')  
     return redirect('login')
 
-# Check if user is an admin
-def is_admin(user):
-    return user.is_superuser
 
 @login_required
 @user_passes_test(is_admin)
@@ -133,6 +183,7 @@ def admin_dashboard(request):
     # Set the timezone to Asia/Manila
     manila_timezone = timezone.get_current_timezone()
     today = timezone.now().astimezone(manila_timezone).date()
+    recent_transactions = Order.objects.filter(created_at__date=today).prefetch_related('items__product')
 
     # Get today's orders and recent transactions (limit to last 10)
     orders = Order.objects.filter(created_at__date=today)
@@ -175,6 +226,7 @@ def admin_dashboard(request):
         'total_sales_today': total_sales_today,
         'total_transactions': total_transactions,
         'average_sale_value': average_sale_value,
+        'recent_transactions': recent_transactions,
     }
     return render(request, 'Admin/dashboard.html', context)
 
@@ -252,6 +304,8 @@ def product_list(request):
                 category_form.save()
                 messages.success(request, "Category added successfully.")
                 return redirect('product_list')
+
+        
         
         elif 'edit_category' in request.POST:  # Check if the category edit form is submitted
             category_id = request.POST.get('category_id')
@@ -280,15 +334,44 @@ def product_list(request):
 
 @user_passes_test(is_admin)
 def add_product(request):
+
+    categories = Category.objects.all()
+
     if request.method == "POST":
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Product added successfully.")
+        if 'add_product' in request.POST:  # Check if the product form is submitted
+            product_form = ProductForm(request.POST)
+            if product_form.is_valid():
+                product_form.save()
+                messages.success(request, "Product added successfully.")
+                return redirect('product_list')
+        
+        elif 'add_category' in request.POST:  # Check if the category form is submitted
+            category_form = CategoryForm(request.POST)
+            if category_form.is_valid():
+                category_form.save()
+                messages.success(request, "Category added successfully.")
+                return redirect('product_list')
+        
+        elif 'edit_category' in request.POST:  # Check if the category edit form is submitted
+            category_id = request.POST.get('category_id')
+            category_name = request.POST.get('category_name')
+
+            # Get the category or return a 404 if not found
+            category = get_object_or_404(Category, id=category_id)
+            category.name = category_name  # Update the category name
+            category.save()  # Save the updated category
+            messages.success(request, "Category updated successfully.")
             return redirect('product_list')
     else:
         form = ProductForm()
-    return render(request, 'Product/add_product.html', {'form': form})
+    
+    category_form = CategoryForm()
+    context={
+        'category_form': category_form, 
+        'categories': categories,
+        'form': form,
+    }
+    return render(request, 'Product/add_product.html', context)
 
 @user_passes_test(is_admin)
 def edit_product(request, product_id):
