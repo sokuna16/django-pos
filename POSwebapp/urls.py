@@ -46,3 +46,4 @@ urlpatterns = [
     path('inventory/', views.inventory_report, name='inventory_report'),
     path('export_sales_report/', views.export_sales_report, name='export_sales_report'),
 ]
+
